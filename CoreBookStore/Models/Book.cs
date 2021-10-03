@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace CoreBookStore.Models
 {
-    public class Book
+    public class Book : BaseEntity
     {
         [Key]
         public int BookId { get; set; }
