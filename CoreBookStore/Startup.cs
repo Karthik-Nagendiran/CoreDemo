@@ -1,4 +1,6 @@
 using CoreBookStore.Data;
+using CoreBookStore.Repositories;
+using CoreBookStore.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -32,6 +34,16 @@ namespace CoreBookStore
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddControllersWithViews();
+
+            services.AddScoped<IBookRepository, BookRepository>();
+            services.AddScoped<IBookService, BookService>();
+
+            services.AddScoped<BookLanguageRepository, BookLanguageRepository>();
+            services.AddScoped<IBookLanguageService, BookLanguageService>();
+
+            services.AddScoped<PublisherRepository, PublisherRepository>();
+            services.AddScoped<IPublisherService, PublisherService>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

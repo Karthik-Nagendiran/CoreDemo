@@ -1,0 +1,45 @@
+﻿@model CoreBookStore.ViewModels.BookViewModel
+@{
+	ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+<form asp-actioon="Create" method="post">
+<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+   <div class="form-group">
+	<label asp-for="BookModel.Title" class="control-label"></label>
+	<input asp-for="BookModel.Title" class="form-control" />
+	<span asp-validation-for="BookModel.Title" class="text-danger"></span>
+   </div>
+   <div class="form-group">
+	<label asp-for="BookModel.ISBN" class="control-label"></label>
+	<input asp-for="BookModel.ISBN" class="form-control" />
+	<span asp-validation-for="BookModel.ISBN" class="text-danger"></span>
+   </div>
+   <div class="form-group">
+	<label asp-for="BookModel.Pages" class="control-label"></label>
+	<input asp-for="BookModel.Pages" class="form-control" />
+	<span asp-validation-for="BookModel.Pages" class="text-danger"></span>
+   </div>
+   <div class="form-group">
+	<label asp-for="BookModel.PublicationDate" class="control-label"></label>
+	<input asp-for="BookModel.PublicationDate" class="form-control" asp-format="{0:MMM dd, yyyy}" />
+	<span asp-validation-for="BookModel.PublicationDate" class="text-danger"></span>
+   </div>
+   <div class="form-group">
+		<label asp-for="Languages" class="control-label"></label>
+		@*<select asp-for="Languages" class ="form-control" asp-items="Model.Languages"></select>*@
+		@Html.DropDownListFor(m => m.SelectedLanguage , Model.Languages, "Select Language", new { @class = "form-control" })
+	</div>
+	<div class="form-group">
+		<label asp-for="Publishers" class="control-label"></label>
+		@*<select asp-for="Languages" class ="form-control" asp-items="Model.Languages"></select>*@
+		@Html.DropDownListFor(m => m.SelectedPublisher , Model.Publishers, "Select Publisher", new { @class = "form-control" })
+	</div>
+
+   <div class="form-group">
+	<input type="submit" value="Create" class="btn btn-primary" />
+	<a asp-action="Index" class="btn btn-secondary">Back to List</a>
+   </div>
+</form>
+

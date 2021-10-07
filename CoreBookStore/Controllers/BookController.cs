@@ -1,18 +1,28 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using CoreBookStore.Services;
+using CoreBookStore.ViewModels;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace CoreBookStore.Controllers
 {
     public class BookController : Controller
     {
-        // GET: BookController
-        public ActionResult Index()
+        private readonly IBookService _bookService;
+        private readonly IBookLanguageService _bookLanguageService;
+        private readonly IPublisherService _publisherService;
+
+        public BookController(IBookService bookService, IBookLanguageService bookLanguageService, IPublisherService publisherService)
         {
-            return View();
+            _bookService = bookService;
+            _bookLanguageService = bookLanguageService;
+            _publisherService = publisherService;
+        }
+        // GET: BookController
+        public async Task<IActionResult> Index()
+        {
+            return View(await _bookService.GetAllBooks());
         }
 
         // GET: BookController/Details/5
@@ -24,22 +34,39 @@ namespace CoreBookStore.Controllers
         // GET: BookController/Create
         public ActionResult Create()
         {
-            return View();
+
+            BookViewModel bookViewModel = new BookViewModel
+            {
+
+                Languages = _bookLanguageService.GetBookLanguages().Result,
+                Publishers = _publisherService.GetAllPublishers().Result
+            };
+
+            return View(bookViewModel);
         }
 
         // POST: BookController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        //public ActionResult Create(IFormCollection collection)
+        public async Task<IActionResult> Create(BookViewModel model)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                if (ModelState.IsValid)
+                {
+                    var book = model.BookModel;                    
+                    await _bookService.CreateBookAsync(book);
+                    return RedirectToAction(nameof(Index));
+                }
+                
             }
-            catch
+            catch (Exception ex)
             {
-                return View();
+                ModelState.AddModelError("", "Unable to save changes.");
             }
+
+            return View(model.BookModel);
         }
 
         // GET: BookController/Edit/5
