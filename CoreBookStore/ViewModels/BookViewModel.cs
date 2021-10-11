@@ -15,9 +15,13 @@ namespace CoreBookStore.ViewModels
 
         public IEnumerable<SelectListItem> Publishers { get; set; }
 
-        public string SelectedLanguage { get; set; }
+        public IEnumerable<SelectListItem> Authors { get; set; }
+
+        public int SelectedLanguage { get; set; }
 
         public int SelectedPublisher { get; set; }
+
+        public int SelectedAuthor { get; set; }
     }
     //public class BookViewModel
     //{

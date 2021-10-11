@@ -18,15 +18,23 @@ namespace CoreBookStore.Repositories
         {
             try
             {
-                var query = "INSERT INTO Books (Title, ISBN, LanguageCode, Pages, PublicationDate, PublisherId) VALUES (@Title, @ISBN, @LanguageCode, @Pages, @PublicationDate, @PublisherId)";
+                var query = @"INSERT INTO Books (Title, ISBN, LanguageId, PublisherId, AuthorId, Pages, PublicationDate, IsDeleted, CreatedOn, ModifiedOn, CreatedBy, ModifiedBy)
+                                VALUES (@Title, @ISBN, @LanguageId, @PublisherId, @AuthorId, @Pages, @PublicationDate, @IsDeleted, @CreatedOn, @ModifiedOn, @CreatedBy, @ModifiedBy);";
 
                 var parameters = new DynamicParameters();
                 parameters.Add("Title", entity.Title, DbType.String);
                 parameters.Add("ISBN", entity.ISBN, DbType.String);
-                parameters.Add("LanguageCode", entity.Language.LanguageCode, DbType.Int32);
+                parameters.Add("LanguageId", entity.LanguageId, DbType.Int32);
+                parameters.Add("PublisherId", entity.PublisherId, DbType.Int32);
+                parameters.Add("AuthorId", entity.AuthorId, DbType.Int32);
                 parameters.Add("Pages", entity.Pages, DbType.Int32);
                 parameters.Add("PublicationDate", entity.PublicationDate, DbType.DateTime);
-                parameters.Add("PublisherId", entity.Publisher.PublisherId, DbType.Int32);
+                parameters.Add("IsDeleted", false, DbType.Boolean);
+                parameters.Add("CreatedOn", entity.CreatedOn, DbType.DateTime);
+                parameters.Add("ModifiedOn", entity.ModifiedOn, DbType.DateTime);
+                parameters.Add("CreatedBy", entity.CreatedBy, DbType.String);
+                parameters.Add("ModifiedBy", entity.ModifiedBy, DbType.String);
+
 
                 using (var connection = CreateConnection())
                 {
@@ -63,17 +71,21 @@ namespace CoreBookStore.Repositories
         {
             try
             {
-                var query = @"SELECT * FROM Books B
-                                INNER JOIN BookLanguages Language ON Language.LanguageCode = B.LanguageCode
-                                INNER JOIN Publishers Publisher ON Publisher.PublisherId = B.PublisherId";
+                var query = @"SELECT B.BookId, B.Title, B.ISBN, B.Pages, b.PublicationDate, B.LanguageId, BL.LanguageName, B.PublisherId, P.PublisherName, B.AuthorId, A.AuthorName,
+                                B.CreatedBy, B.CreatedOn, B.ModifiedBy, B.ModifiedOn FROM Books B
+                                LEFT JOIN BookLanguages BL ON BL.LanguageId = B.LanguageId
+                                LEFT JOIN Publishers P ON P.PublisherId = B.PublisherId
+                                LEFT JOIN Authors A ON A.AuthorId = B.AuthorId
+                                WHERE B.IsDeleted = 0 ORDER BY B.Title;";
                 using (var connection = CreateConnection())
                 {
-                    var result = await connection.QueryAsync<Book, BookLanguage, Publisher, Book>(query, (b, bl, p) =>
+                    var result = await connection.QueryAsync<Book, BookLanguage, Publisher, Author, Book>(query, (b, bl, p, a) =>
                     {
                         b.Language = bl;
                         b.Publisher = p;
+                        b.Author = a;
                         return b;
-                    }, splitOn: "LanguageId,PublisherId");
+                    }, splitOn: "LanguageId,PublisherId,AuthorId");
                     return result.ToList();
                 }
             }

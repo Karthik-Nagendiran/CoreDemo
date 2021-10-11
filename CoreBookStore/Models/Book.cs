@@ -32,6 +32,7 @@ namespace CoreBookStore.Models
         public int Pages { get; set; }
 
         [DisplayName("Year Published")]
+        [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
         public DateTime PublicationDate { get; set; }
 

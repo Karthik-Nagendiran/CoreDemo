@@ -44,6 +44,9 @@ namespace CoreBookStore
             services.AddScoped<PublisherRepository, PublisherRepository>();
             services.AddScoped<IPublisherService, PublisherService>();
 
+            services.AddScoped<AuthorRepository, AuthorRepository>();
+            services.AddScoped<IAuthorService, AuthorService>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

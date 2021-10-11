@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace CoreBookStore.Repositories
 {
-    public class BookLanguageRepository : BaseRepository
+    public class AuthorRepository : BaseRepository
     {
-        public BookLanguageRepository(IConfiguration configuration) : base(configuration) 
+        public AuthorRepository(IConfiguration configuration) : base(configuration)
         {
 
         }
@@ -18,7 +18,7 @@ namespace CoreBookStore.Repositories
         {
             try
             {
-                var query = @"SELECT LanguageId AS [Value], LanguageName As [Text] FROM BookLanguages ORDER by LanguageName;";
+                var query = @"SELECT AuthorId As [Value], AuthorName AS [Text] From Authors WHERE IsDeleted = 0 ORDER BY AuthorName;";
                 using (var connection = CreateConnection())
                 {
                     var result = await connection.QueryAsync<SelectListItem>(query).ConfigureAwait(false);
@@ -29,6 +29,8 @@ namespace CoreBookStore.Repositories
             {
                 throw new Exception(ex.Message, ex);
             }
+
         }
+
     }
 }

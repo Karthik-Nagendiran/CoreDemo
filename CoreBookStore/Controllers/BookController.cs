@@ -12,12 +12,14 @@ namespace CoreBookStore.Controllers
         private readonly IBookService _bookService;
         private readonly IBookLanguageService _bookLanguageService;
         private readonly IPublisherService _publisherService;
+        private readonly IAuthorService _authorService;
 
-        public BookController(IBookService bookService, IBookLanguageService bookLanguageService, IPublisherService publisherService)
+        public BookController(IBookService bookService, IBookLanguageService bookLanguageService, IPublisherService publisherService, IAuthorService authorService)
         {
             _bookService = bookService;
             _bookLanguageService = bookLanguageService;
             _publisherService = publisherService;
+            _authorService = authorService;
         }
         // GET: BookController
         public async Task<IActionResult> Index()
@@ -39,7 +41,9 @@ namespace CoreBookStore.Controllers
             {
 
                 Languages = _bookLanguageService.GetBookLanguages().Result,
-                Publishers = _publisherService.GetAllPublishers().Result
+                Publishers = _publisherService.GetAllPublishers().Result,
+                Authors = _authorService.GetAllAuthors().Result
+                
             };
 
             return View(bookViewModel);
@@ -55,8 +59,18 @@ namespace CoreBookStore.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    var book = model.BookModel;                    
+                    var book = model.BookModel;
+                    book.AuthorId = model.SelectedAuthor;
+                    book.PublisherId = model.SelectedPublisher;
+                    book.LanguageId = model.SelectedLanguage;
+
+                    book.CreatedBy = "BookStoreAdmin";
+                    book.CreatedOn = DateTime.UtcNow;
+                    book.ModifiedBy = "BookStoreAdmin";
+                    book.ModifiedOn = DateTime.UtcNow;
+
                     await _bookService.CreateBookAsync(book);
+
                     return RedirectToAction(nameof(Index));
                 }
                 

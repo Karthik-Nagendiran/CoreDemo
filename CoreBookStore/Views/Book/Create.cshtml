@@ -29,12 +29,17 @@
    <div class="form-group">
 		<label asp-for="Languages" class="control-label"></label>
 		@*<select asp-for="Languages" class ="form-control" asp-items="Model.Languages"></select>*@
-		@Html.DropDownListFor(m => m.SelectedLanguage , Model.Languages, "Select Language", new { @class = "form-control" })
+		@Html.DropDownListFor(m => m.SelectedLanguage , Model.Languages, "--Select Language--", new { @class = "form-control" })
 	</div>
 	<div class="form-group">
 		<label asp-for="Publishers" class="control-label"></label>
 		@*<select asp-for="Languages" class ="form-control" asp-items="Model.Languages"></select>*@
-		@Html.DropDownListFor(m => m.SelectedPublisher , Model.Publishers, "Select Publisher", new { @class = "form-control" })
+		@Html.DropDownListFor(m => m.SelectedPublisher , Model.Publishers, "--Select Publisher--", new { @class = "form-control" })
+	</div>
+	<div class="form-group">
+		<label asp-for="Authors" class="control-label"></label>
+		@*<select asp-for="Languages" class ="form-control" asp-items="Model.Languages"></select>*@
+		@Html.DropDownListFor(m => m.SelectedAuthor , Model.Authors, "--Select Author--", new { @class = "form-control" })
 	</div>
 
    <div class="form-group">
