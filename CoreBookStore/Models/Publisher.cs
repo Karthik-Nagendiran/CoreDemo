@@ -2,7 +2,7 @@
 
 namespace CoreBookStore.Models
 {
-    public class Publisher
+    public class Publisher : BaseEntity
     {
         [Key]
         public int PublisherId { get; set; }

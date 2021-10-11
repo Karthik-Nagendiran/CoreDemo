@@ -61,7 +61,7 @@ namespace CoreBookStore.Controllers
                 }
                 
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 ModelState.AddModelError("", "Unable to save changes.");
             }

@@ -2,7 +2,7 @@
 
 namespace CoreBookStore.Models
 {
-    public class BookLanguage
+    public class BookLanguage : BaseEntity
     {
         [Key]
         public int LanguageId { get; set; }

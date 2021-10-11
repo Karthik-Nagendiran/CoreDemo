@@ -3,15 +3,15 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CoreBookStore.Models
 {
-    public class BookAuthor
+    public class BookAuthor : BaseEntity
     {
         [Key]
         public int BookAuthorId { get; set; }
 
-        [ForeignKey("Book")]
+        [ForeignKey("BookId")]
         public int BookId { get; set; }
 
-        [ForeignKey("Author")]
+        [ForeignKey("AuthorId")]
         public int AuthorId { get; set; }
     }
 }
