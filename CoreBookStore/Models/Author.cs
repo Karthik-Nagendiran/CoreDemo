@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace CoreBookStore.Models
 {
@@ -6,6 +7,7 @@ namespace CoreBookStore.Models
     {   
         [Key]
         public int AuthorId { get; set; }
+        [DisplayName("Author Name")]
         public string AuthorName { get; set; }
     }
 }

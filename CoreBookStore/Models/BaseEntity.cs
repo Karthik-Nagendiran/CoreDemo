@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 
 namespace CoreBookStore.Models
 {
@@ -6,8 +7,10 @@ namespace CoreBookStore.Models
     {
         public bool IsDeleted { get; set; } = false;
 
+        [DisplayName("Created On")]
         public DateTime CreatedOn { get; set; } = DateTime.Now;
 
+        [DisplayName("Modified On")]
         public DateTime ModifiedOn { get; set; } = DateTime.Now;
 
         public string CreatedBy { get; set; } = string.Empty;
