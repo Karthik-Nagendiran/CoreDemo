@@ -3,7 +3,7 @@
 @{
     ViewData["Title"] = "Authors";
 }
-<div class="row">
+<div class="row mt-5">
 <div class="col">
     <h1>Authors</h1>
 </div>
@@ -11,8 +11,8 @@
     <a asp-action="Create" class="btn btn-success">Create New</a>
 </div>
 </div>
-<table class="table">
-    <thead>
+<table class="table table-responsive-md table-striped table-bordered table-hover">
+    <thead class="thead-dark">
         <tr>
             <th>
                 @Html.DisplayNameFor(model => model.AuthorName)
@@ -41,8 +41,8 @@
                 </td>
                 <td>
                     <a class="btn btn-primary" asp-action="Edit" asp-route-id="@item.AuthorId">Edit</a>
-                    <a class="btn btn-secondary" asp-action="Details" asp-route-id="@item.AuthorId">Details</a>
-                    <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.AuthorId">Delete</a>
+                    @*<a class="btn btn-secondary" asp-action="Details" asp-route-id="@item.AuthorId">Details</a>*@
+                    <a class="btn btn-danger" asp-action="Delete"  asp-route-id="@item.AuthorId">Delete</a>
                 </td>
             </tr>
         }

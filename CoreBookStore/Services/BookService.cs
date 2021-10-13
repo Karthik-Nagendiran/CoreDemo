@@ -18,7 +18,7 @@ namespace CoreBookStore.Services
             return await _bookRepository.CreateAsync(book);
         }
 
-        public async Task<int> DeleteBookAsync(Book book)
+        public async Task<bool> DeleteBookAsync(Book book)
         {
             return await _bookRepository.DeleteAsync(book);
         }

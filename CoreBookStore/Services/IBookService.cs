@@ -10,6 +10,6 @@ namespace CoreBookStore.Services
         public Task<Book> GetBookById(int id);
         public Task<int> CreateBookAsync(Book book);
         public Task<int> UpdateBookAsync(Book book);
-        public Task<int> DeleteBookAsync(Book book);
+        public Task<bool> DeleteBookAsync(Book book);
     }
 }

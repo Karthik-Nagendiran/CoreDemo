@@ -1,9 +1,8 @@
-﻿using CoreBookStore.Services;
+﻿using CoreBookStore.Models;
+using CoreBookStore.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace CoreBookStore.Controllers
@@ -38,10 +37,18 @@ namespace CoreBookStore.Controllers
         // POST: AuthorController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public async Task<IActionResult> Create(Author model)
         {
             try
             {
+                if (ModelState.IsValid)
+                {
+                    model.IsDeleted = false;
+                    model.CreatedOn = model.ModifiedOn = DateTime.UtcNow;
+                    model.CreatedBy = model.ModifiedBy = "BookStoreAdmin";
+
+                    await _authorService.CreateAuthorAsync(model);
+                }
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -51,18 +58,21 @@ namespace CoreBookStore.Controllers
         }
 
         // GET: AuthorController/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
+        public async Task<IActionResult> Edit(int id)
+        {            
+            return View(await _authorService.GetAuthorByIdAsync(id));
         }
 
         // POST: AuthorController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async  Task<IActionResult> Edit(Author model)
         {
             try
             {
+                model.ModifiedOn = DateTime.UtcNow;
+                model.ModifiedBy = "BookStoreAdmin";
+                await _authorService.UpdateAuhtorAsync(model);
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -72,9 +82,11 @@ namespace CoreBookStore.Controllers
         }
 
         // GET: AuthorController/Delete/5
-        public ActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            return View();
+            var author = await _authorService.GetAuthorByIdAsync(id);
+            await _authorService.DeleteAuthorAsync(author);
+            return RedirectToAction(nameof(Index)); 
         }
 
         // POST: AuthorController/Delete/5

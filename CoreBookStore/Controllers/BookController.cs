@@ -84,18 +84,39 @@ namespace CoreBookStore.Controllers
         }
 
         // GET: BookController/Edit/5
-        public ActionResult Edit(int id)
+        public async Task<IActionResult> Edit(int id)
         {
-            return View();
+            var book = await _bookService.GetBookById(id);
+            BookViewModel bookViewModel = new()
+            {
+                BookModel = book,
+                Languages = _bookLanguageService.GetBookLanguages().Result,
+                Publishers = _publisherService.GetAllPublishers().Result,
+                Authors = _authorService.GetAllAuthors().Result,
+                SelectedAuthor = book.AuthorId,
+                SelectedLanguage = book.LanguageId,
+                SelectedPublisher = book.PublisherId                
+            };
+
+            return View(bookViewModel);
         }
 
         // POST: BookController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<IActionResult> Edit(BookViewModel model)
         {
             try
             {
+                var book = model.BookModel;
+                book.AuthorId = model.SelectedAuthor;
+                book.PublisherId = model.SelectedPublisher;
+                book.LanguageId = model.SelectedLanguage;
+                book.ModifiedOn = DateTime.UtcNow;
+                book.ModifiedBy = "BookStoreAdmin";
+
+                await _bookService.UpdateBookAsync(book);
+                
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -105,9 +126,18 @@ namespace CoreBookStore.Controllers
         }
 
         // GET: BookController/Delete/5
-        public ActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            return View();
+            try
+            {
+                var book = await _bookService.GetBookById(id);
+                await _bookService.DeleteBookAsync(book);
+                return RedirectToAction(nameof(Index));
+            }
+            catch
+            {
+                return View();
+            }
         }
 
         // POST: BookController/Delete/5
@@ -116,7 +146,7 @@ namespace CoreBookStore.Controllers
         public ActionResult Delete(int id, IFormCollection collection)
         {
             try
-            {
+            {   
                 return RedirectToAction(nameof(Index));
             }
             catch

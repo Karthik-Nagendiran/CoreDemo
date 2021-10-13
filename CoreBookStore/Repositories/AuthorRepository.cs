@@ -1,9 +1,11 @@
 ﻿using CoreBookStore.Models;
 using Dapper;
+using Dapper.Contrib.Extensions;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace CoreBookStore.Repositories
@@ -15,14 +17,36 @@ namespace CoreBookStore.Repositories
 
         }
 
-        public Task<int> CreateAsync(Author entity)
+        public async Task<int> CreateAsync(Author entity)
         {
-            throw new NotImplementedException();
+            try
+            {
+                using var connection = CreateConnection();
+                return (Convert.ToInt32(await connection.InsertAsync(entity)));
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
 
-        public Task<int> DeleteAsync(Author entity)
+        public Task<bool> DeleteAsync(Author entity)
         {
-            throw new NotImplementedException();
+            try
+            {
+                using (var connection = CreateConnection())
+                {
+                    return Task.FromResult(connection.Delete(entity));
+                }
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
 
         public async Task<IEnumerable<SelectListItem>> GetAllAuthors()
@@ -44,34 +68,61 @@ namespace CoreBookStore.Repositories
 
         public async Task<List<Author>> GetAllAsync()
         {
+            List<Author> authors = new List<Author>();
             try
             {
-                var query = @"SELECT AuthorId, AuthorName From Authors WHERE IsDeleted = 0 ORDER BY AuthorName;";
-                using (var connection = CreateConnection())
-                {
-                    var result = await connection.QueryAsync<Author>(query).ConfigureAwait(false);
-                    return result.AsList();
-                }
+                //var query = @"SELECT AuthorId, AuthorName From Authors WHERE IsDeleted = 0 ORDER BY AuthorName;";
+                //using (var connection = CreateConnection())
+                //{
+                //    var result = await connection.QueryAsync<Author>(query).ConfigureAwait(false);
+                //    return result.AsList();
+                //}
+
+                using var connection = CreateConnection();                
+                var result = await connection.GetAllAsync<Author>().ConfigureAwait(false);
+                authors = result.OrderBy(a => a.AuthorName).ToList();
+                
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message, ex);
+                throw new Exception(ex.Message, ex); 
             }
+
+            return authors;
         }
 
         public Task<Author> GetByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                using (var connection = CreateConnection())
+                {
+                    return Task.FromResult(connection.Get<Author>(id));
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
 
         public Task<int> UpdateAsync(Author entity)
         {
-            throw new NotImplementedException();
-        }
+            try
+            {
+                using (var connection = CreateConnection())
+                {
+                    var result = connection.Update<Author>(entity);
+                    return Task.FromResult(result ? entity.AuthorId : 0); 
+                }
 
-        Task<List<Author>> IRepository<Author>.GetAllAsync()
-        {
-            throw new NotImplementedException();
-        }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }        
     }
 }

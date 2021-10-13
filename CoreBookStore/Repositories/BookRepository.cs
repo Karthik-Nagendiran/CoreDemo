@@ -47,7 +47,7 @@ namespace CoreBookStore.Repositories
             }
         }
 
-        public async Task<int> DeleteAsync(Book entity)
+        public async Task<bool> DeleteAsync(Book entity)
         {
             try
             {
@@ -58,7 +58,8 @@ namespace CoreBookStore.Repositories
 
                 using (var connection = CreateConnection())
                 {
-                    return (await connection.ExecuteAsync(query, parameters));
+                    int result = await connection.ExecuteAsync(query, parameters);
+                    return result > 0;
                 }
             }
             catch (Exception ex)
@@ -119,16 +120,20 @@ namespace CoreBookStore.Repositories
         {
             try
             {
-                var query = "UPDATE Books SET Title = @Title, ISBN = @ISBN, LanguageCode = @LanguageCode, Pages = @Pages, PublicationDate = @PublicationDate, PublisherId = @PublisherId WHERE BookId = @BookId";
+                var query = "UPDATE Books SET Title = @Title, ISBN = @ISBN, LanguageId = @LanguageId, AuthorId = @AuthorId, Pages = @Pages, PublicationDate = @PublicationDate, PublisherId = @PublisherId, IsDeleted = @IsDeleted WHERE BookId = @BookId";
 
                 var parameters = new DynamicParameters();
+                parameters.Add("BookId", entity.BookId, DbType.Int32);
                 parameters.Add("Title", entity.Title, DbType.String);
                 parameters.Add("ISBN", entity.ISBN, DbType.String);
-                parameters.Add("LanguageCode", entity.Language.LanguageCode, DbType.Int32);
+                parameters.Add("LanguageId", entity.LanguageId, DbType.Int32);
+                parameters.Add("PublisherId", entity.PublisherId, DbType.Int32);
+                parameters.Add("AuthorId", entity.AuthorId, DbType.Int32);
                 parameters.Add("Pages", entity.Pages, DbType.Int32);
                 parameters.Add("PublicationDate", entity.PublicationDate, DbType.DateTime);
-                parameters.Add("PublisherId", entity.Publisher.PublisherId, DbType.Int32);
-                parameters.Add("Id", entity.BookId, DbType.Int32);
+                parameters.Add("IsDeleted", entity.IsDeleted, DbType.Boolean);                
+                parameters.Add("ModifiedOn", entity.ModifiedOn, DbType.DateTime);                
+                parameters.Add("ModifiedBy", entity.ModifiedBy, DbType.String);
 
                 using (var connection = CreateConnection())
                 {

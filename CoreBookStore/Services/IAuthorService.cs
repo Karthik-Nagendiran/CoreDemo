@@ -9,5 +9,9 @@ namespace CoreBookStore.Services
     {
         Task<IEnumerable<SelectListItem>> GetAllAuthors();
         Task<List<Author>> GetAuthorsAsync();
+        Task<int> CreateAuthorAsync(Author author);
+        Task<int> UpdateAuhtorAsync(Author author);
+        Task<bool> DeleteAuthorAsync(Author author);
+        Task<Author> GetAuthorByIdAsync(int id);
     }
 }

@@ -10,7 +10,7 @@
     <a class="btn btn-success float-right" asp-action="Create">Create New</a>
 </p>*@
 
-<div class="row">
+<div class="row mt-5">
     <div class="col">
         <h1>Books</h1>
     </div>
@@ -19,8 +19,8 @@
     </div>
 </div>
 
-<table class="table">
-    <thead>
+<table class="table table-responsive-md table-striped table-dark table-hover">
+    <thead class="thead-dark ">
         <tr>
             <th>
                 @Html.DisplayNameFor(model => model.Title)
@@ -39,10 +39,7 @@
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.PublisherId)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.LanguageId)
-            </th>
+            </th>            
             <th>
                 @Html.DisplayNameFor(model => model.AuthorId)
             </th>
@@ -69,10 +66,7 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Publisher.PublisherName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Language.LanguageName)
-            </td>
+            </td>            
             <td>
                 @Html.DisplayFor(modelItem => item.Author.AuthorName)
             </td>
